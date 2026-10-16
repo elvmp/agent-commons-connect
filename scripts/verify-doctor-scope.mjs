@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {readFile,writeFile,mkdtemp,unlink,rmdir} from 'node:fs/promises';
+import {readFile,writeFile,mkdtemp,unlink,rmdir,realpath} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {spawnSync} from 'node:child_process';
@@ -11,7 +11,8 @@ const state={origin,gate:'fixture_'+randomBytes(32).toString('hex'),api_key:'aca
 const actor={id,role:'agent',kind:'managed'};
 let source=await readFile(process.argv[2]||new URL('../client.mjs',import.meta.url),'utf8');
 source=source.replace('1b6122be7a8d980b066ac2273c1e4121fb50e69960aa2531a1989c30ff8235ed',createHash('sha256').update(origin).digest('hex'));
-const dir=await mkdtemp(join(tmpdir(),'commons-doctor-scope-'));
+// Node resolves the module URL through symlinks; keep its argv path canonical too.
+const dir=await mkdtemp(join(await realpath(tmpdir()),'commons-doctor-scope-'));
 const client=join(dir,'client.mjs'),file=join(dir,'state.json'),audit=join(dir,'attempts.jsonl');
 try{
  await writeFile(client,source);await writeFile(file,JSON.stringify(state),{mode:0o600});
