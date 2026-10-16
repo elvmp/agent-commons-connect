@@ -1,0 +1,106 @@
+{
+  "schema": "commons_snapshot_fixture_v1",
+  "data_kind": "fully_synthetic",
+  "fixture": {
+    "targets": {
+      "selected_head": "SYNTHETIC_SELECTED_A",
+      "foreign_base": "SYNTHETIC_FOREIGN_BASE"
+    },
+    "before_by_command": {
+      "git commit": {
+        "index": "SYNTHETIC_STAGED_B",
+        "worktree": "SYNTHETIC_WORKING_A_B_C",
+        "foreign_worktree": "SYNTHETIC_FOREIGN_WORKING",
+        "untracked": "SYNTHETIC_UNTRACKED_NOTE"
+      },
+      "git commit --only shared.py": {
+        "index": "SYNTHETIC_STAGED_B",
+        "worktree": "SYNTHETIC_WORKING_A_B_C",
+        "foreign_worktree": "SYNTHETIC_FOREIGN_WORKING",
+        "untracked": "SYNTHETIC_UNTRACKED_NOTE"
+      },
+      "native private index": {
+        "index": "SYNTHETIC_STAGED_B",
+        "worktree": "SYNTHETIC_WORKING_A_B_C",
+        "foreign_worktree": "SYNTHETIC_FOREIGN_WORKING",
+        "untracked": "SYNTHETIC_UNTRACKED_NOTE"
+      }
+    }
+  },
+  "report": {
+    "schema": "one_checkout_demo_v1",
+    "status": "demo_passed",
+    "checks": {
+      "commit_contains_only_A": true,
+      "staged_B_blob_unchanged": true,
+      "working_A_B_C_unchanged": true,
+      "foreign_staged_and_working_bytes_unchanged": true,
+      "parent_is_captured_parent": true,
+      "receipt_identifies_commit": true,
+      "plan_preserves_repository": true,
+      "cached_diff_matches_stored_blobs": true,
+      "working_changes_remain_detectable": true,
+      "preserved_staging_risk_is_reported": true,
+      "stale_parent_refused_without_writes": true
+    },
+    "follow_on_control": {
+      "checks": {
+        "selected_commit_contains_A": true,
+        "retained_index_differs_from_selected_commit": true,
+        "ordinary_commit_reverses_A": true,
+        "ordinary_commit_follows_selected_commit": true,
+        "working_bytes_unchanged": true
+      }
+    },
+    "controls": [
+      {
+        "command": "git commit",
+        "after": {
+          "head": "SYNTHETIC_STAGED_B",
+          "index": "SYNTHETIC_STAGED_B",
+          "worktree": "SYNTHETIC_WORKING_A_B_C",
+          "foreign_head": "SYNTHETIC_FOREIGN_STAGED",
+          "foreign_worktree": "SYNTHETIC_FOREIGN_WORKING",
+          "untracked": "SYNTHETIC_UNTRACKED_NOTE"
+        },
+        "selected_commit": false,
+        "shared_index_blob_preserved": true,
+        "foreign_staged_file_excluded": false,
+        "worktree_preserved": true
+      },
+      {
+        "command": "git commit --only shared.py",
+        "after": {
+          "head": "SYNTHETIC_WORKING_A_B_C",
+          "index": "SYNTHETIC_WORKING_A_B_C",
+          "worktree": "SYNTHETIC_WORKING_A_B_C",
+          "foreign_head": "SYNTHETIC_FOREIGN_BASE",
+          "foreign_worktree": "SYNTHETIC_FOREIGN_WORKING",
+          "untracked": "SYNTHETIC_UNTRACKED_NOTE"
+        },
+        "selected_commit": false,
+        "shared_index_blob_preserved": false,
+        "foreign_staged_file_excluded": true,
+        "worktree_preserved": true
+      },
+      {
+        "command": "native private index",
+        "after": {
+          "head": "SYNTHETIC_SELECTED_A",
+          "index": "SYNTHETIC_STAGED_B",
+          "worktree": "SYNTHETIC_WORKING_A_B_C",
+          "foreign_head": "SYNTHETIC_FOREIGN_BASE",
+          "foreign_worktree": "SYNTHETIC_FOREIGN_WORKING",
+          "untracked": "SYNTHETIC_UNTRACKED_NOTE"
+        },
+        "selected_commit": true,
+        "shared_index_blob_preserved": true,
+        "foreign_staged_file_excluded": true,
+        "worktree_preserved": true
+      }
+    ],
+    "control_assessment": {
+      "status": "passed"
+    }
+  }
+}
