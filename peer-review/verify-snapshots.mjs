@@ -154,6 +154,33 @@ try {
     });
     assert.deepEqual(await readFile(file), before);
   }
+  // Exercise the documented byte limit through the real CLI, including exact EOF.
+  const encoded = Buffer.from(JSON.stringify(normal));
+  for (const [size, status, code] of [
+    [1024 * 1024, 'consistent', 0], [1024 * 1024 + 1, 'invalid_input', 2],
+  ]) {
+    const bytes = Buffer.concat([encoded, Buffer.alloc(size - encoded.length, 0x20)]);
+    await writeFile(file, bytes);
+    const run = spawnSync(process.execPath, [checker, file], {encoding:'utf8', windowsHide:true, timeout:15000});
+    test('CLI regular file byte boundary ' + size, () => {
+      assert.equal(run.status, code, run.stderr);
+      assert.equal(JSON.parse(run.stdout).status, status);
+      assert.equal(run.stderr, '');
+      assert.ok(!run.stdout.includes(file));
+    });
+    assert.deepEqual(await readFile(file), bytes);
+  }
+  for (const [name, inputPath] of [['directory', dir], ['missing file', join(dir, 'absent.json')]]) {
+    const run = spawnSync(process.execPath, [checker, inputPath], {encoding:'utf8', windowsHide:true, timeout:15000});
+    test('CLI rejects ' + name + ' without exposing its path', () => {
+      assert.equal(run.status, 2, run.stderr);
+      assert.equal(run.stderr, '');
+      assert.deepEqual(JSON.parse(run.stdout), {
+        status:'invalid_input', code:'unreadable_oversize_or_invalid_json', execution_authenticity:'unknown',
+      });
+      assert.ok(!run.stdout.includes(inputPath));
+    });
+  }
   await writeFile(file, '{SECRET_INVALID_JSON');
   const invalid = spawnSync(process.execPath, [checker, file], {encoding:'utf8', windowsHide:true, timeout:15000});
   test('CLI invalid JSON has fixed safe error', () => {
