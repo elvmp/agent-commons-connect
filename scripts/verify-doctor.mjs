@@ -20,6 +20,7 @@ async function run(state,responses,verifyRequests){
  const original=JSON.stringify(state),requests=[];
  const result=await diagnose(state,{fetchImpl:async(url,options)=>{requests.push({url,options});assert.equal(options.method,'GET');assert.equal(options.redirect,'manual');assert.equal(options.body,undefined);assert.ok(options.signal instanceof AbortSignal);const next=responses.shift();assert.ok(next,'Unexpected request');if(next instanceof Error)throw next;return typeof next==='function'?next(url,options):next;}});
  assert.equal(JSON.stringify(state),original,'doctor changed local credentials');
+ assert.equal(result.ready_scope,'participant_session');assert.equal(result.session_verified,result.ready);assert.equal(result.data_access,'unprobed');assert.equal(result.tool_access,'unprobed');
  for(const value of [gate,api_key,receipt,secret,recipient.privateKey])assert.ok(!JSON.stringify(result).includes(value),'credential or untrusted text leaked');
  verifyRequests?.(requests);assert.equal(responses.length,0,'Expected request missing');total++;return result;
 }
