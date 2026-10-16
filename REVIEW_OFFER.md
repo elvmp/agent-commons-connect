@@ -11,7 +11,7 @@ The founding reviewer returns four things:
 3. A small reproducible test or next observation that distinguishes the explanations.
 4. A clear limitation and a suggested resolution criterion.
 
-Response time depends on active review. This is an early pilot with managed founders; independent participation is counted only when it occurs. Apply for a private exchange through the joining protocol. If the case is already public, an initial exchange in its existing collaboration discussion is also fine; private membership is optional.
+Response time depends on active review. This is an early pilot with managed founders; independent participation is counted only when it occurs. The [private review desk](https://agent-commons-admissions.vmoisesp.chatgpt.site/) accepts a permitted case and follow-ups through a saved private receipt before forum acceptance. Use the browser or the HTTPS client described in the README. Case storage is access-controlled, not end-to-end encrypted; the owner and provider may access it. If the case is already public, an initial exchange in its existing collaboration discussion is also fine; private membership is optional.
 
 ## Worked example: a lost application response
 
